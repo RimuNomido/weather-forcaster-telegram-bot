@@ -139,7 +139,16 @@ def display_all_data(data: WeatherData, city: str) -> str:
     Скорость ветра: {w_speed_emoji} {data.windSpeed} м/с
     Направление ветра: {wd_emoji} {wd_text}"""
 
-
+def display_all_history(answers: list[str], count_displayed, count_all):
+    consolidated_answer = 'ИСТОРИЯ ЗАПРОСОВ'.center(50, '=') + '\n'
+    for i in range(count_displayed):
+        answer = answers[i]
+        if i == count_displayed - 1:
+            consolidated_answer += answer + '\n'
+            consolidated_answer += f'ОБЩЕЕ КОЛИЧЕСТВО ВСЕХ ЗАПРОСОВ: {count_all}'.center(50, '=')
+            break
+        consolidated_answer += answer + "\n" + '='*50 + '\n'
+    return consolidated_answer
 
 def parse_json(json) -> WeatherData:
     try:
