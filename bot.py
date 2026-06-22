@@ -40,7 +40,10 @@ async def send_weather(message: types.Message, command: CommandObject):
         return
     answer = display_all_data(weather_data, city)
 
-    save_query(message.from_user.id, city, data_dict)
+    try:
+        save_query(message.from_user.id, city, data_dict)
+    except:
+        await message.answer('При сохранении запроса в историю произошла ошибка. На данные прогноза это не повлияет.')
 
     await message.answer(answer)
 
@@ -49,22 +52,28 @@ async def history_command(message: types.Message, command: CommandObject):
     arg = command.args
     user_id = message.from_user.id
     if arg is None:
-        queries = get_queries(user_id)
-        count_of_queries = get_queries_count(user_id)
-        if count_of_queries == 0:
-            await message.answer('История запросов пуста.')
-            return
-        count_of_displayed_queries = len(queries)
-        answers_data = []
-        for city, json_data in queries:
-            dict_data = json.loads(json_data)
-            weather_data = parse_json(dict_data)
-            answer = display_all_data(weather_data, city)
-            answers_data.append(answer)
-        await message.answer(display_all_history(answers_data, count_of_displayed_queries, count_of_queries))
+        try:
+            queries = get_queries(user_id)
+            count_of_queries = get_queries_count(user_id)
+            if count_of_queries == 0:
+                await message.answer('История запросов пуста.')
+                return
+            count_of_displayed_queries = len(queries)
+            answers_data = []
+            for city, json_data in queries:
+                dict_data = json.loads(json_data)
+                weather_data = parse_json(dict_data)
+                answer = display_all_data(weather_data, city)
+                answers_data.append(answer)
+            await message.answer(display_all_history(answers_data, count_of_displayed_queries, count_of_queries))
+        except:
+            await message.answer('При обращении к базе данных произошла непредвиденная ошибка. Попробуйте позже.')
     elif arg == 'clear':
-        clear_queries(user_id)
-        await message.answer('История запросов успешно очищена.')
+        try:
+            clear_queries(user_id)
+            await message.answer('История запросов успешно очищена.')
+        except:
+            await message.answer('При очистке истории произошла ошибка. Попробуйте позже')
         
 async def main():
     await dp.start_polling(bot)

@@ -26,6 +26,7 @@ def save_query(user_id, city, weather_data):
     cursor.execute('INSERT INTO queries (user_id, city, weather_data) VALUES (?, ?, ?)', (user_id, city, data))
     connection.commit()
 
+
 def get_queries(user_id):
     cursor.execute('SELECT city, weather_data FROM queries WHERE user_id = ?', (user_id,))
     rows = cursor.fetchall()
@@ -33,8 +34,8 @@ def get_queries(user_id):
 
 def get_queries_count(user_id):
     cursor.execute('SELECT COUNT(*) FROM queries WHERE user_id = ?', (user_id,))
-    rows = cursor.fetchall()
-    return len(rows)
+    rows = cursor.fetchone()
+    return rows[0]
 
 def clear_queries(user_id):
     cursor.execute('DELETE FROM queries WHERE user_id = ?', (user_id,))
