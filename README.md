@@ -1,7 +1,3 @@
-Обновил README под ваш аккаунт. Ниже финальная версия — можно копировать в `README.md`.
-
----
-
 ```markdown
 # Weather Forecaster Telegram Bot
 
