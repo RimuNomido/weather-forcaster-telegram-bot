@@ -11,7 +11,8 @@ def init_db():
     CREATE TABLE IF NOT EXISTS queries (
         user_id INTEGER,
         city TEXT NOT NULL,
-        weather_data JSON
+        weather_data JSON,
+        query_date TEXT DEFAULT CURRENT_TIMESTAMP
         )
     ''')
 
@@ -28,7 +29,7 @@ def save_query(user_id, city, weather_data):
 
 
 def get_queries(user_id):
-    cursor.execute('SELECT city, weather_data FROM queries WHERE user_id = ?', (user_id,))
+    cursor.execute('SELECT city, weather_data, datetime(query_date, "localtime") FROM queries WHERE user_id = ?', (user_id,))
     rows = cursor.fetchall()
     return rows[-10::]
 

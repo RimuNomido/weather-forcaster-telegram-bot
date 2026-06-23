@@ -103,6 +103,7 @@ class WeatherParser:
             return "💦"
 
     static_emojis = {
+        "date": "🗓️",
         "city": "📍",
         "pressure": "🧭",
         "temp_c": "🌡️",
@@ -110,7 +111,7 @@ class WeatherParser:
     }
 
 
-def display_all_data(data: WeatherData, city: str) -> str:
+def display_weather_data(data: WeatherData, city: str) -> str:
     c_emoji = WeatherParser.cloudiness_emojis.get(data.cloudiness, "🌥️")
     c_text = WeatherParser.cloudiness_ru.get(data.cloudiness, data.cloudiness)
 
@@ -128,7 +129,8 @@ def display_all_data(data: WeatherData, city: str) -> str:
     
     se = WeatherParser.static_emojis
 
-    return f"""{se['city']} Погода: {city}
+    return f"""
+    {se['city']} Погода: {city}
     Облачность: {c_emoji} {c_text}
     Влажность: {humidity_emoji} {data.humidity}%
     Тип осадков: {pt_emoji} {pt_text}
@@ -149,6 +151,12 @@ def display_all_history(answers: list[str], count_displayed, count_all):
             break
         consolidated_answer += answer + "\n" + '='*50 + '\n'
     return consolidated_answer
+
+def parse_query_to_story(data, city, query_date):
+    date_str = f'🗓️ Дата: {query_date}'
+    parsed_weather_data = display_weather_data(data, city)
+    parsed_query = date_str + parsed_weather_data
+    return parsed_query
 
 def parse_json(json) -> WeatherData:
     try:
